@@ -22,11 +22,9 @@
 #include "core/Configuration.h"
 #include "core/State.h"
 #include "core/Watch.h"
-
-Watch watch = Watch();
-
 #include "core/EventActions.h"
 
+Watch watch = Watch();
 auto configuration = std::shared_ptr<Configuration>(new Configuration());
 auto state = std::shared_ptr<State>(new State());
 
@@ -41,5 +39,5 @@ void setup() {
 
 void loop() {
 	watch.loop();
-	delay(10);
+	delay(10); // required for watchdog
 }
