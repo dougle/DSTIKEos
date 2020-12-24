@@ -61,7 +61,8 @@ void Watch::buttonPress(EvtPinListener lstn){
 			break;
 	}
 
-	this->display.on();
+	if ( !(*this->state).displayOn)
+		this->display.on();
 
 	// start a new display off timer
 	this->displayTimer = new EvtTimeListener((*this->configuration).Display_Timeout * 1000, false, (EvtAction)&EventActions::displayTimeout);
