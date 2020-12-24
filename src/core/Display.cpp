@@ -54,27 +54,30 @@ void Display::showSplash() {
 void Display::showClock(tm local_time) {
 	if(this->splashHold) return;
 
+	int y_offset = 13;
+	int time_font_height = (int)ArialMT_Plain_16[1];
+	int date_font_height = (int)ArialMT_Plain_10[1];
+
 	if((*this->state).rendered_time.tm_sec != local_time.tm_sec) {
 		// clear the area to be updated
 		this->OLED.setColor(BLACK);
-		int time_font_width = 18;
+		int time_font_width = (int)ArialMT_Plain_16[0];
 		int time_font_width_sep = 5;
-		int y_offset = 15;
 
 		// mask out seconds
-		this->OLED.fillRect((OLED_WIDTH/2)+time_font_width-time_font_width_sep, y_offset, 2*time_font_width, 22);
+		this->OLED.fillRect((OLED_WIDTH/2)+time_font_width-time_font_width_sep, y_offset, 2*time_font_width, time_font_height);
 
 		if((*this->state).rendered_time.tm_min != local_time.tm_min) {
 			// mask out minutes
-			this->OLED.fillRect((OLED_WIDTH/2)-time_font_width, y_offset, 2*time_font_width, 22);
+			this->OLED.fillRect((OLED_WIDTH/2)-time_font_width, y_offset, 2*time_font_width, time_font_height);
 
 			if((*this->state).rendered_time.tm_hour != local_time.tm_hour) {
 				// mask out hours
-				this->OLED.fillRect((OLED_WIDTH/2)-(time_font_width*3)-time_font_width_sep, y_offset, 2*time_font_width, 22);
+				this->OLED.fillRect((OLED_WIDTH/2)-(time_font_width*3)-time_font_width_sep, y_offset, 2*time_font_width, time_font_height);
 
 				if((*this->state).rendered_time.tm_mday != local_time.tm_mday) {
 					// clear the whole clock
-					this->OLED.fillRect(0, y_offset, OLED_WIDTH, 28);
+					this->OLED.fillRect(0, y_offset, OLED_WIDTH, time_font_height+date_font_height);
 				}
 			}
 		}
@@ -86,11 +89,11 @@ void Display::showClock(tm local_time) {
 
 	char formatted_time[20];
 	strftime(formatted_time, 20, (*this->configuration).Time_Format, &local_time);
-	this->string(OLED_WIDTH/2, 10, formatted_time, ArialMT_Plain_16, TEXT_ALIGN_CENTER);
+	this->string(OLED_WIDTH/2, y_offset, formatted_time, ArialMT_Plain_16, TEXT_ALIGN_CENTER);
 
 	char formatted_date[30];
 	strftime(formatted_date, 30, (*this->configuration).Date_Format, &local_time);
-	this->string(OLED_WIDTH/2, 28, formatted_date, ArialMT_Plain_10, TEXT_ALIGN_CENTER);
+	this->string(OLED_WIDTH/2, y_offset+time_font_height, formatted_date, ArialMT_Plain_10, TEXT_ALIGN_CENTER);
 }
 
 /**
