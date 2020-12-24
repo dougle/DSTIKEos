@@ -28,7 +28,7 @@ public:
 	void on();
 	void off();
 	void showSplash();
-	bool clearSplash();
+	void clearSplash();
 	void showStatusIcons(unsigned int);
 	void string(int16_t x, int16_t y, const char* text, const uint8_t *fontData, OLEDDISPLAY_TEXT_ALIGNMENT align);
 	void string(int16_t x, int16_t y, const char* text, const uint8_t *fontData) {

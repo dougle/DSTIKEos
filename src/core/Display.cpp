@@ -31,7 +31,7 @@ void Display::loop() {
 	Serial.println("Display loop");
 }
 
-bool Display::clearSplash() {
+void Display::clearSplash() {
 	Serial.println("Clearing splash");
 
 	this->splashHold = false;
