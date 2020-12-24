@@ -5,7 +5,7 @@ DSTIKEos is an effort to establish a baseline framework for the DSTIKE wristband
 
 DSTIKEos provides configuration, state, display, and wifi with an events based programming approach.
 
-The intention for this framework is to boot the watch, load configuration, connect to wifi and then loop through configured event handlers.
+The intention for this framework is to boot the watch, load configuration, connect to wifi and then loop through configured event handlers, performing functions defined by modules.
 
 #### Future features
 * Modular, plugin-like structure so that watch owners can download include/exclude modules that they require.
