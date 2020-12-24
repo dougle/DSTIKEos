@@ -17,7 +17,7 @@ void WIFI::begin(std::shared_ptr<Configuration> config, std::shared_ptr<State> s
 	this->configuration = config;
 	this->state = state;
 
-	this->connect((*this->configuration).WiFI_Connections[this->current_ssid_index][0], (*this->configuration).WiFI_Connections[this->current_ssid_index][1]);
+	this->connect((*this->configuration).WiFI_Connections[this->currentSsidIndex][0], (*this->configuration).WiFI_Connections[this->currentSsidIndex][1]);
 }
 
 /**
@@ -53,24 +53,8 @@ bool WIFI::openAP() {
 	return WiFi.softAP(ssid, (*this->configuration).AP_Password, channel, (*this->configuration).AP_Hidden?1:0);
 }
 
-void WIFI::status_change(EvtWifiStateListener lstn, EvtContext ctx) {
+void WIFI::statusChange(EvtWifiStateListener lstn, EvtContext ctx) {
 	Serial.printf("WiFi status changed from %s to %s\n", lstn.getStatusName(lstn.previousState), lstn.getStatusName(lstn.currentState));
-
-//	clear_wifi_symbol();
-//
-//	draw_wifi_symbol(lstn);
-//
-//	if (lstn.currentState != WL_CONNECTED) {
-//		if (!blink_wifi_listener) {
-//			blink_wifi_listener = new EvtTimeListener(1000, true, (EvtAction) blink_wifi);
-//			mgr.addListener(blink_wifi_listener);
-//		}
-//	} else {
-//		if(blink_wifi_listener)
-//			mgr.removeListener(blink_wifi_listener);
-//	}
-//
-//	OLED.display();
 
 	// move on to next wifi
 	unsigned int number_of_networks = sizeof((*this->configuration).WiFI_Connections) / sizeof((*this->configuration).WiFI_Connections[0]);
@@ -80,14 +64,14 @@ void WIFI::status_change(EvtWifiStateListener lstn, EvtContext ctx) {
 		case WL_CONNECTION_LOST:
 		case WL_DISCONNECTED:
 		case WL_NO_SSID_AVAIL:
-			(*this->state).wifi_state = 0;
+			(*this->state).wifiState = 0;
 
-			this->current_ssid_index = (this->current_ssid_index+1)%number_of_networks;
+			this->currentSsidIndex = (this->currentSsidIndex + 1) % number_of_networks;
 
-			this->connect((*this->configuration).WiFI_Connections[this->current_ssid_index][0], (*this->configuration).WiFI_Connections[this->current_ssid_index][1]);
+			this->connect((*this->configuration).WiFI_Connections[this->currentSsidIndex][0], (*this->configuration).WiFI_Connections[this->currentSsidIndex][1]);
 			break;
 		case WL_CONNECTED:
-			(*this->state).wifi_state = 1;
+			(*this->state).wifiState = 1;
 
 			Serial.printf("Setting up NTP %s\n", (*this->configuration).NTP_Server_Host);
 			NTP.setInterval(63);

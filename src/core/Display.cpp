@@ -58,7 +58,7 @@ void Display::showClock(tm local_time) {
 	int time_font_height = (int)ArialMT_Plain_16[1];
 	int date_font_height = (int)ArialMT_Plain_10[1];
 
-	if((*this->state).rendered_time.tm_sec != local_time.tm_sec) {
+	if((*this->state).renderedTime.tm_sec != local_time.tm_sec) {
 		// clear the area to be updated
 		this->OLED.setColor(BLACK);
 		int time_font_width = (int)ArialMT_Plain_16[0];
@@ -67,22 +67,22 @@ void Display::showClock(tm local_time) {
 		// mask out seconds
 		this->OLED.fillRect((OLED_WIDTH/2)+time_font_width-time_font_width_sep, y_offset, 2*time_font_width, time_font_height);
 
-		if((*this->state).rendered_time.tm_min != local_time.tm_min) {
+		if((*this->state).renderedTime.tm_min != local_time.tm_min) {
 			// mask out minutes
 			this->OLED.fillRect((OLED_WIDTH/2)-time_font_width, y_offset, 2*time_font_width, time_font_height);
 
-			if((*this->state).rendered_time.tm_hour != local_time.tm_hour) {
+			if((*this->state).renderedTime.tm_hour != local_time.tm_hour) {
 				// mask out hours
 				this->OLED.fillRect((OLED_WIDTH/2)-(time_font_width*3)-time_font_width_sep, y_offset, 2*time_font_width, time_font_height);
 
-				if((*this->state).rendered_time.tm_mday != local_time.tm_mday) {
+				if((*this->state).renderedTime.tm_mday != local_time.tm_mday) {
 					// clear the whole clock
 					this->OLED.fillRect(0, y_offset, OLED_WIDTH, time_font_height+date_font_height);
 				}
 			}
 		}
 
-		(*this->state).rendered_time = local_time;
+		(*this->state).renderedTime = local_time;
 	}
 
 	this->OLED.setColor(WHITE);
@@ -144,13 +144,13 @@ void Display::string(int16_t x, int16_t y, const char * text, const uint8_t *fon
 void Display::on() {
 	Serial.println("Display on");
 	this->OLED.displayOn();
-	(*state).display_on = true;
+	(*state).displayOn = true;
 }
 
 void Display::off() {
 	Serial.println("Display off");
 	this->OLED.displayOff();
-	(*state).display_on = false;
+	(*state).displayOn = false;
 }
 
 void Display::render() {

@@ -9,14 +9,13 @@
 
 class State {
 public:
-	unsigned long display_duration;
-	bool display_on = true;
+	bool displayOn = true;
 
 	time_t now;
-	tm local_now;
-	tm rendered_time;
+	tm localNow;
+	tm renderedTime;
 
-	unsigned int wifi_state = 0;
+	unsigned int wifiState = 0;
 };
 
 #endif //DSTIKEOS_STATE_H

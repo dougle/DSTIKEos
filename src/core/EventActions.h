@@ -9,31 +9,31 @@
 
 class EventActions {
 public:
-	static bool clock_tick(EvtListener lstn, EvtContext ctx) {
+	static bool clockTick(EvtListener lstn, EvtContext ctx) {
 		extern Watch watch;
-		watch.clock_tick(lstn);
+		watch.clockTick(lstn);
 		return false;
 	}
 
-	static bool clear_splash(EvtListener lstn, EvtContext ctx) {
+	static bool clearSplash(EvtListener lstn, EvtContext ctx) {
 		extern Watch watch;
 		watch.display.clearSplash();
 		return false;
 	}
 
-	static bool wifi_status_change(EvtWifiStateListener lstn, EvtContext ctx) {
+	static bool wifiStatusChange(EvtWifiStateListener lstn, EvtContext ctx) {
 		extern Watch watch;
-		watch.wifi.status_change(lstn, ctx);
+		watch.wifi.statusChange(lstn, ctx);
 		return false;
 	}
 
-	static bool button_press(EvtPinListener lstn, EvtContext ctx) {
+	static bool buttonPress(EvtPinListener lstn, EvtContext ctx) {
 		extern Watch watch;
-		watch.button_press(lstn);
+		watch.buttonPress(lstn);
 		return false;
 	}
 
-	static bool display_timeout(EvtTimeListener lstn, EvtContext ctx) {
+	static bool displayTimeout(EvtTimeListener lstn, EvtContext ctx) {
 		extern Watch watch;
 		watch.display.off();
 

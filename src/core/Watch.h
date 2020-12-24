@@ -27,13 +27,13 @@ public:
 	void begin(std::shared_ptr<Configuration> config, std::shared_ptr<State> state);
 	void loop();
 
-	void clock_tick(EvtListener lstn);
-	void button_press(EvtPinListener lstn);
+	void clockTick(EvtListener lstn);
+	void buttonPress(EvtPinListener lstn);
 
 private:
 	std::shared_ptr<Configuration> configuration;
 	std::shared_ptr<State> state;
-	EvtManager event_mgr;
+	EvtManager eventMgr;
 	EvtTimeListener *displayTimer;
 };
 
