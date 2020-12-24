@@ -29,7 +29,7 @@ public:
 	void off();
 	void showSplash();
 	void clearSplash();
-	void showStatusIcons(unsigned int);
+	void showStatusIcons();
 	void string(int16_t x, int16_t y, const char* text, const uint8_t *fontData, OLEDDISPLAY_TEXT_ALIGNMENT align);
 	void string(int16_t x, int16_t y, const char* text, const uint8_t *fontData) {
 		string(x, y, text, fontData, TEXT_ALIGN_LEFT);

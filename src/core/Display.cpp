@@ -100,8 +100,10 @@ void Display::showClock(tm local_time) {
  * Sets non content UI elements, icons etc
  * @param int wifi 0=Connecting 1=Station 2=AP
  */
-void Display::showStatusIcons(unsigned int wifi) {
+void Display::showStatusIcons() {
 	if(this->splashHold) return;
+
+	unsigned int wifi = (*this->state).wifiState;
 
 	Serial.println("Displaying Status Icons");
 	Serial.printf("wifi is: %d\n", wifi);
@@ -109,7 +111,7 @@ void Display::showStatusIcons(unsigned int wifi) {
 	switch (wifi) {
 		case 0:
 			this->OLED.drawXbm(OLED_WIDTH - wifi_01_width, 0, wifi_01_width, wifi_01_height, wifi_01_bits);
-			this->string(OLED_WIDTH - wifi_01_width - 1,0, "!", ArialMT_Plain_10, TEXT_ALIGN_RIGHT);
+			this->string(OLED_WIDTH - wifi_01_width - 1,int16_t(0), "!", ArialMT_Plain_10, TEXT_ALIGN_RIGHT);
 			break;
 		case 1:
 			this->OLED.drawXbm(OLED_WIDTH - wifi_01_width, 0, wifi_01_width, wifi_01_height, wifi_01_bits);

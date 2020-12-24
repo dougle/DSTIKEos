@@ -18,12 +18,14 @@ public:
 	static bool clearSplash(EvtListener lstn, EvtContext ctx) {
 		extern Watch watch;
 		watch.display.clearSplash();
+		watch.display.showStatusIcons();
 		return false;
 	}
 
 	static bool wifiStatusChange(EvtWifiStateListener lstn, EvtContext ctx) {
 		extern Watch watch;
 		watch.wifi.statusChange(lstn, ctx);
+		watch.display.showStatusIcons();
 		return false;
 	}
 
