@@ -57,7 +57,7 @@ void Watch::buttonPress(EvtPinListener lstn){
 
 	switch(lstn.pin){
 		default:
-			Serial.sprint("Unrecognised pin press %d\n", lstn.pin);
+			Serial.printf("Unrecognised pin press %d\n", lstn.pin);
 			break;
 	}
 
