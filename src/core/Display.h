@@ -35,7 +35,8 @@ public:
 		string(x, y, text, fontData, TEXT_ALIGN_LEFT);
 	};
 	void loop();
-	void showClock(tm);
+	void showClock(tm, bool);
+	void showClock(tm local_time) { showClock(local_time, false); }
 
 	unsigned long displayTimeout;
 	EvtTimeListener *displayTimer;

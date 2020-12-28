@@ -1,9 +1,9 @@
 /*
  * Display.cpp
  */
-
 #include "Display.h"
 #include "../version.h"
+#include <OLEDDisplay.h>
 
 Display::Display() {}
 
@@ -51,49 +51,76 @@ void Display::showSplash() {
 	this->splashHold = true;
 }
 
-void Display::showClock(tm local_time) {
-	if(this->splashHold) return;
+void Display::showClock(tm local_time, bool force) {
+	if(!force && this->splashHold) return;
 
+	// if we aren't going to update anything return
+	if(!force && (*this->state).renderedTime.tm_sec == local_time.tm_sec)
+		return;
+
+	// set the top margin of the time
 	int y_offset = 13;
+	int x_offset = OLED_WIDTH/2;
+
+	// get some font heights used
 	int time_font_height = (int)ArialMT_Plain_16[1];
 	int date_font_height = (int)ArialMT_Plain_10[1];
 
-	if((*this->state).renderedTime.tm_sec != local_time.tm_sec) {
-		// clear the area to be updated
-		this->OLED.setColor(BLACK);
-		int time_font_width = (int)ArialMT_Plain_16[0];
-		int time_font_width_sep = 5;
-
-		// mask out seconds
-		this->OLED.fillRect((OLED_WIDTH/2)+time_font_width-time_font_width_sep, y_offset, 2*time_font_width, time_font_height);
-
-		if((*this->state).renderedTime.tm_min != local_time.tm_min) {
-			// mask out minutes
-			this->OLED.fillRect((OLED_WIDTH/2)-time_font_width, y_offset, 2*time_font_width, time_font_height);
-
-			if((*this->state).renderedTime.tm_hour != local_time.tm_hour) {
-				// mask out hours
-				this->OLED.fillRect((OLED_WIDTH/2)-(time_font_width*3)-time_font_width_sep, y_offset, 2*time_font_width, time_font_height);
-
-				if((*this->state).renderedTime.tm_mday != local_time.tm_mday) {
-					// clear the whole clock
-					this->OLED.fillRect(0, y_offset, OLED_WIDTH, time_font_height+date_font_height);
-				}
-			}
-		}
-
-		(*this->state).renderedTime = local_time;
-	}
-
-	this->OLED.setColor(WHITE);
-
+	// format the new time
 	char formatted_time[20];
 	strftime(formatted_time, 20, (*this->configuration).Time_Format, &local_time);
-	this->string(OLED_WIDTH/2, y_offset, formatted_time, ArialMT_Plain_16, TEXT_ALIGN_CENTER);
 
-	char formatted_date[30];
-	strftime(formatted_date, 30, (*this->configuration).Date_Format, &local_time);
-	this->string(OLED_WIDTH/2, y_offset+time_font_height, formatted_date, ArialMT_Plain_10, TEXT_ALIGN_CENTER);
+	// get the pixel widths of some static characters
+	this->OLED.setFont(ArialMT_Plain_16);
+	uint16_t time_sep_width = this->OLED.getStringWidth(":");
+	char two_wide_chars_width = this->OLED.getStringWidth("55");
+
+	// calculate the width of each minute character
+	char minutes[2];
+	sprintf(minutes, "%02d", local_time.tm_min);
+	int minute_left_width = this->OLED.getStringWidth(String(minutes[0]));
+	int minute_right_width = this->OLED.getStringWidth(String(minutes[1]));
+
+	// DEBUG paint section rectangles
+//	this->OLED.setColor(WHITE);
+//	this->OLED.fillRect(x_offset - minute_left_width - time_sep_width - two_wide_chars_width, y_offset, two_wide_chars_width, time_font_height);
+//	this->OLED.fillRect(x_offset - minute_left_width, y_offset, minute_left_width + minute_right_width, time_font_height);
+//	this->OLED.fillRect(x_offset + minute_right_width + time_sep_width, y_offset, two_wide_chars_width, time_font_height);
+
+	// mask out seconds
+	this->OLED.setColor(BLACK);
+	this->OLED.fillRect(x_offset + minute_right_width + time_sep_width, y_offset, two_wide_chars_width, time_font_height);
+
+	if((*this->state).renderedTime.tm_min != local_time.tm_min || force) {
+		// mask out minutes
+		this->OLED.fillRect(x_offset - minute_left_width, y_offset, minute_left_width + minute_right_width, time_font_height);
+
+		if((*this->state).renderedTime.tm_hour != local_time.tm_hour || force) {
+			// mask out hours
+			this->OLED.fillRect(x_offset - minute_left_width - time_sep_width - two_wide_chars_width, y_offset, two_wide_chars_width, time_font_height);
+
+			if((*this->state).renderedTime.tm_mday != local_time.tm_mday || force) {
+				// format the old date for clearing
+				char old_formatted_date[30];
+				strftime(old_formatted_date, 30, (*this->configuration).Date_Format, &(*this->state).renderedTime);
+				int old_formatted_date_width = this->OLED.getStringWidth(String(old_formatted_date));
+
+				// format the new date
+				char formatted_date[30];
+				strftime(formatted_date, 30, (*this->configuration).Date_Format, &local_time);
+
+				// clear the whole date and set the new string
+				this->OLED.fillRect(x_offset - (old_formatted_date_width/2), y_offset + time_font_height, old_formatted_date_width, date_font_height);
+				this->OLED.setColor(WHITE);
+				this->string(x_offset, y_offset + time_font_height, formatted_date, ArialMT_Plain_10, TEXT_ALIGN_CENTER);
+			}
+		}
+	}
+
+	(*this->state).renderedTime = local_time;
+
+	this->OLED.setColor(WHITE);
+	this->string(x_offset, y_offset, formatted_time, ArialMT_Plain_16, TEXT_ALIGN_CENTER);
 }
 
 /**
